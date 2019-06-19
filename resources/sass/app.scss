@@ -1,0 +1,57 @@
+
+// Fonts
+@import url('https://fonts.googleapis.com/css?family=Nunito');
+
+// Variables
+@import 'variables';
+@import 'form';
+
+// Bootstrap
+@import '~bootstrap/scss/bootstrap';
+
+@import 'node_modules/@fortawesome/fontawesome-free/scss/fontawesome';
+
+.navbar-laravel {
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+}
+ 
+#treeview {
+	list-style: none;
+}
+
+#treeview ul {
+	list-style: none;
+}
+
+#treeview ul li {
+	list-style: none;
+}
+
+.sidebar .treenav i {
+    font-size: 14px;
+    float: left;
+    margin-right: 0px;
+    line-height: 19px;
+    width: 30px;
+    text-align: center;
+    color: #a9afbb;
+}
+
+primary:not(.card-header-icon):not(.card-header-text), .card.bg-primary, .card.card-rotate.bg-primary .front, .card.card-rotate.bg-primary .back {
+    background: #fcd800 !important;
+}
+
+.col-form-label {
+	font-weight: bold !important;
+	color: #000000 !important;
+}
+
+.font-color-white {
+    color: #ffffff;
+}
+
+.font-color-black {
+    color: #000000;
+}
+

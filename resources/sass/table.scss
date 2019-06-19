@@ -1,0 +1,33 @@
+.pagetable thead {
+  background-color: $tuyellow;
+}
+
+.pagetable thead th {
+  font-weight: bold !important;
+}
+
+.table th.report-group-names, .table td.report-group-names {
+  max-width: 350px !important;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+table.dataTable thead .sorting_asc {
+  padding-right: 5px !important;
+  text-align: center;
+}
+
+table.dataTable thead .sorting_desc {
+  padding-right: 5px !important;
+  text-align: center;
+}
+
+.bs_select {
+
+}
+
+.dataTables_wrapper {
+  width: 98%;
+  margin: auto;
+}
