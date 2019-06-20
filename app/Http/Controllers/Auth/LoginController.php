@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 use PhpXmlRpc\Value;
 use PhpXmlRpc\Request as XmlRpcRequest;
 use PhpXmlRpc\Client;
-
+use Illuminate\Support\Facades\Log;
 
 class LoginController extends Controller
 {
@@ -31,7 +31,7 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/fsf';
+    protected $redirectTo = '/home';
 
     /**
      * Create a new controller instance.
@@ -43,41 +43,24 @@ class LoginController extends Controller
         $this->middleware('guest')->except('logout');
     }
 
+    public function authenticate()
+    {
+    	throw new Exception("In authenticate");
+
+        if (Auth::attempt(['email' => $email, 'password' => $password])) {
+            // Authentication passed...
+            if(Auth::user()->suspended){
+                return redirect('account-suspended');
+            }
+            return redirect()->intended('dashboard');
+        }
+    }
 /*
     public function login(Request $request)
     {
+    	Log::emergency('Inside login');
 
-    	$method = 'authenticatorlogin';
-    	$parameters = array("rroyce@transunion.com", "mcdoodle22@", $_SERVER['REMOTE_ADDR']);
-
-	$client = new Client('https://auth.tlo.com/AuthService.php');
-	$response = $client->send(new XmlRpcRequest($method, $parameters));
-
-	print_r($response);
-
-	exit(1);
-
-    	throw new \Exception('Login failure');
-
-        $this->validateLogin($request);
-
-        if ($this->hasTooManyLoginAttempts($request)) {
-            $this->fireLockoutEvent($request);
-
-            return $this->sendLockoutResponse($request);
-        }
-
-        if(Auth::attempt(['email' => $request->email, 'password' => $request->password, 'is_activated' => 1])) {
-            // return redirect()->intended('dashboard');
-        }  else {
-            $this->incrementLoginAttempts($request);
-            return response()->json([
-                'error' => 'This account is not activated.'
-            ], 401);
-        }
-
-        $this->incrementLoginAttempts($request);
-        return $this->sendFailedLoginResponse($request);
+    	parent::login($request);
     }
 */
 }

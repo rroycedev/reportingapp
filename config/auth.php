@@ -14,7 +14,7 @@ return [
     */
 
     'defaults' => [
-        'guard' => 'web',
+        'guard' => 'custom',
         'passwords' => 'users',
     ],
 
@@ -46,6 +46,12 @@ return [
             'provider' => 'users',
             'hash' => false,
         ],
+
+        'custom' => [
+            'driver' => 'gatekeeper',
+            'provider' => 'gatekeeper',
+        ],
+
     ],
 
 
@@ -71,7 +77,9 @@ return [
             'driver' => 'eloquent',
             'model' => App\User::class,
         ],
-
+    	'gatekeeper' => [
+        	'driver' => 'gatekeeper'
+    	],
         // 'users' => [
         //     'driver' => 'database',
         //     'table' => 'users',
