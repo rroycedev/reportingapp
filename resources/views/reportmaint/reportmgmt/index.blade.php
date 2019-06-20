@@ -70,7 +70,7 @@
           </form>
         </div>
       </div>
- 
+
     </div>
   </div>
 
@@ -100,21 +100,6 @@
 	<script>
     	    	$(document).ready(function() {
 			InitReportManagement();
-
-			 $( "#draggable" ).draggable();
-    $( "#droppable" ).droppable({
-      drop: function( event, ui ) {
-        $( this )
-          .addClass( "ui-state-highlight" )
-          .find( "p" )
-            .html( "Dropped!" );
-      }
-    });
-
-			//$('#myModal').modal({
-			//  keyboard: false
-			//})
-
 		});
 	</script>
 @endpush

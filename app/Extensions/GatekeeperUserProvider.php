@@ -3,7 +3,6 @@ namespace App\Extensions;
 
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\UserProvider;
-use Illuminate\Support\Facades\Log;
 
 class GatekeeperUserProvider implements UserProvider {
 	/**
@@ -28,8 +27,6 @@ class GatekeeperUserProvider implements UserProvider {
 	 * @return \Illuminate\Contracts\Auth\Authenticatable|null
 	 */
 	public function retrieveByCredentials(array $credentials) {
-		Log::emergency('MongoUserProvider retrieving by credentials');
-
 		if (empty($credentials)) {
 			return;
 		}
@@ -60,6 +57,7 @@ class GatekeeperUserProvider implements UserProvider {
 		$this->model = $model;
 
 		$this->model->email = $identifier;
+		$this->model->name = "Ron Royce";
 
 		return $model;
 	}

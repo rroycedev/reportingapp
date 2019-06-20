@@ -4,13 +4,13 @@ namespace App\Models\Auth;
 
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 // use App\Services\Contracts\NosqlServiceInterface;
-use Illuminate\Support\Facades\Log;
 
 class User implements AuthenticatableContract {
 	private $conn;
 
 	public $email;
 	public $password;
+	public $name;
 	protected $rememberTokenName = 'email';
 
 	public function __construct() {
@@ -24,19 +24,9 @@ class User implements AuthenticatableContract {
 	 * @return Illuminate\Contracts\Auth\Authenticatable
 	 */
 	public function fetchUserByCredentials(Array $credentials) {
-		Log::emergency('fetchUserByCredentials: ' . json_encode($credentials));
-
 		$this->email = $credentials['email'];
 		$this->password = $credentials['password'];
-
-		/*
-			    $arr_user = $this->conn->find('users', ['username' => $credentials['username']]);
-
-			    if (! is_null($arr_user)) {
-			      $this->username = $arr_user['username'];
-			      $this->password = $arr_user['password'];
-			    }
-		*/
+		$this->name = "Ron Royce";
 
 		return $this;
 	}

@@ -10,7 +10,6 @@ use Illuminate\Contracts\Auth\StatefulGuard;
 use Illuminate\Contracts\Auth\SupportsBasicAuth;
 use Illuminate\Contracts\Auth\UserProvider;
 use Illuminate\Contracts\Session\Session;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Illuminate\Support\Traits\Macroable;
 use Symfony\Component\HttpFoundation\Request;
@@ -183,8 +182,6 @@ class GatekeeperGuard implements StatefulGuard, SupportsBasicAuth {
 	}
 
 	public function login(AuthenticatableContract $user, $remember = false) {
-		Log::emergency('JsonGuard::login updating session');
-
 		$this->updateSession($user->getAuthIdentifier());
 
 		// If the user should be permanently "remembered" by the application we will
@@ -201,13 +198,10 @@ class GatekeeperGuard implements StatefulGuard, SupportsBasicAuth {
 		// based on the login and logout events fired from the guard instances.
 		$this->fireLoginEvent($user, $remember);
 
-		Log::emergency('JsonGuard::login setting user');
 		$this->setUser($user);
 	}
 
 	protected function updateSession($id) {
-		Log::emergency("Id is [" . $id . "]");
-
 		$this->session->put($this->getName(), $id);
 
 		$this->session->migrate(true);
@@ -220,8 +214,6 @@ class GatekeeperGuard implements StatefulGuard, SupportsBasicAuth {
 	 * @return bool
 	 */
 	public function once(array $credentials = []) {
-		Log::emergency('Inside jsonguard once');
-
 		$this->fireAttemptEvent($credentials);
 
 		if ($this->validate($credentials)) {
@@ -240,8 +232,6 @@ class GatekeeperGuard implements StatefulGuard, SupportsBasicAuth {
 	 * @return \Illuminate\Contracts\Auth\Authenticatable|false
 	 */
 	public function onceUsingId($id) {
-		Log::emergency('Inside jsonguard onceUsingId');
-
 		if (!is_null($user = $this->provider->retrieveById($id))) {
 			$this->setUser($user);
 
@@ -252,8 +242,6 @@ class GatekeeperGuard implements StatefulGuard, SupportsBasicAuth {
 	}
 
 	protected function hasValidCredentials($user, $credentials) {
-		Log::emergency('Inside jsonguard hasValidCredentials');
-
 		return !is_null($user) && $this->provider->validateCredentials($user, $credentials);
 	}
 
@@ -285,8 +273,6 @@ class GatekeeperGuard implements StatefulGuard, SupportsBasicAuth {
 	 */
 	public function logout() {
 		$user = $this->user();
-
-		Log::emergency("User : " . get_class($user));
 
 		// If we have an event dispatcher instance, we can fire off the logout event
 		// so any further processing can be done. This allows the developer to be
