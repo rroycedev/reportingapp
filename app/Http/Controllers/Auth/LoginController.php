@@ -2,82 +2,84 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Exceptions\Gatekeeper\GatekeeperAuthConnectException;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
-
-use PhpXmlRpc\Value;
-use PhpXmlRpc\Request as XmlRpcRequest;
-use PhpXmlRpc\Client;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
-class LoginController extends Controller
-{
-    /*
-    |--------------------------------------------------------------------------
-    | Login Controller
-    |--------------------------------------------------------------------------
-    |
-    | This controller handles authenticating users for the application and
-    | redirecting them to your home screen. The controller uses a trait
-    | to conveniently provide its functionality to your applications.
-    |
-    */
+class LoginController extends Controller {
+	/*
+		    |--------------------------------------------------------------------------
+		    | Login Controller
+		    |--------------------------------------------------------------------------
+		    |
+		    | This controller handles authenticating users for the application and
+		    | redirecting them to your home screen. The controller uses a trait
+		    | to conveniently provide its functionality to your applications.
+		    |
+	*/
 
-    use AuthenticatesUsers;
+	use AuthenticatesUsers;
 
-    /**
-     * Where to redirect users after login.
-     *
-     * @var string
-     */
-    protected $redirectTo = '/home';
+	/**
+	 * Where to redirect users after login.
+	 *
+	 * @var string
+	 */
+	protected $redirectTo = '/home';
 
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        $this->middleware('guest')->except('logout');
-    }
+	/**
+	 * Create a new controller instance.
+	 *
+	 * @return void
+	 */
+	public function __construct() {
+		$this->middleware('guest')->except('logout');
+	}
 
-    public function authenticate()
-    {
-    	throw new Exception("In authenticate");
+	public function authenticate() {
+		throw new Exception("In authenticate");
 
-        if (Auth::attempt(['email' => $email, 'password' => $password])) {
-            // Authentication passed...
-            if(Auth::user()->suspended){
-                return redirect('account-suspended');
-            }
-            return redirect()->intended('dashboard');
-        }
-    }
+		if (Auth::attempt(['email' => $email, 'password' => $password])) {
+			// Authentication passed...
+			if (Auth::user()->suspended) {
+				return redirect('account-suspended');
+			}
+			return redirect()->intended('dashboard');
+		}
+	}
 
-    public function login(Request $request)
-    {
-    	Log::emergency('Inside login');
+	public function login(Request $request) {
+		Log::emergency('Inside login');
 
-	$this->validate($request, [ 'email' => 'required|email', 'password' => 'required']);
-/*
-	if ($this->auth->validate(['email' => $request->email, 'password' => $request->password, 'status' => 0])) {
-            return redirect($this->loginPath())
-                ->withInput($request->only('email', 'remember'))
-                ->withErrors('Your account is Inactive or not verified');
-        }
-*/
-        $credentials  = array('email' => $request->email, 'password' => $request->password);
-        if (Auth::attempt($credentials, $request->has('remember'))){
-		Log::emergency('Attempt returned success');
-                return redirect()->intended($this->redirectPath());
-        }
+		$this->validate($request, ['email' => 'required|email', 'password' => 'required']);
 
-	Log::emergency('Attempt returned failure');
+		$credentials = array('email' => $request->email, 'password' => $request->password);
 
-        return redirect('/validate');
-    }
+		try {
+			if (Auth::attempt($credentials, $request->has('remember'))) {
+				Log::emergency('Attempt returned success');
+				return redirect()->intended($this->redirectPath());
+			}
+
+			Log::emergency('Login failed');
+
+			return redirect('/login')
+				->withInput($request->only('email', 'remember'))
+				->withErrors(array('exception' => 'Invalid credentials'));
+		} catch (GatekeeperAuthConnectException $gex) {
+			return redirect('/login')
+				->withInput($request->only('email', 'remember'))
+				->withErrors(array('exception' => "Error connecting to gatekeeper authorization server"));
+		} catch (\Exception $ex) {
+			return redirect('/login')
+				->withInput($request->only('email', 'remember'))
+				->withErrors(array('exception' => $ex->getMessage()));
+		}
+
+		return redirect('/validate');
+	}
 
 }

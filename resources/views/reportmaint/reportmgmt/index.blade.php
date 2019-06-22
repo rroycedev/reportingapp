@@ -9,7 +9,7 @@
   <div class="content">
 	<div id="errordiv" class="alert alert-danger alert-dismissible fade" role="alert">
 	  <div id="errormsg"></div>
-	  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+	  <button type="button" class="close" data-hide="alert" aria-label="Close" onclick="$('#errordiv').removeClass('show');">
 	    <span aria-hidden="true">&times;</span>
 	  </button>
 	</div>
@@ -60,7 +60,7 @@
                 				<td>{{ $report->scheduled_day }}</td>
                 				<td>{{ $report->time }}</td>
                 				<td class="report-group-names" title="{{ $report->group_names }}">{{ $report->group_names }}</td>
-                				<td><span class="reportstatus actionTags deactivate">{{ $report->active ? 'Active' : 'Inactive'}}</span></td>
+                				<td><div class="reportstatus actionTags {{ $report->active ? 'deactivate' : 'activate'}}" data-reportid="{{ $report->Id }}" data-status="{{ $report->active}}">{{ $report->active ? 'Active' : 'Inactive'}}</div></td>
                 				<td><div style="text-align: center;"><a href="#">Edit</a>&nbsp;/&nbsp;<a href="#">Add</a>&nbsp;/&nbsp;<a class="view-report" data-status="closed" data-reportid="{{ $report->Id }}" href="#">View</a></div></td>
                 			</tr>
                 			@endforeach

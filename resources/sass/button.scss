@@ -1,17 +1,20 @@
-.actionTags.deactivate {
-	background: #008000;
-	color: #fff !important;
-	padding: 0px 0px 0px 5px;
-	font-size: 12px;
-	height: 22px;
-	display: inline-block;
-	outline: none;
-}
-
 .actionTags, :actionTags:hover, .actionTags:active {
 	color: #00d4bd !important;
 	cursor: pointer;
 	outline: none;
+}
+
+.actionTags.deactivate {
+	background: #008000;
+	color: #fff !important;
+	padding: 0px 0px 0px 8px;
+	font-size: 12px;
+	height: 22px;
+	display: inline-block;
+	outline: none;
+	width: 96px;
+	text-align: center;
+	cursor: pointer;
 }
 
 .actionTags.deactivate::after {
@@ -23,7 +26,34 @@
 	font-size: 12px;
 	display: inline-block;
 	height: 100%;
-	width: 50px;
+	width: 44px;
+	margin-left: 10px;
+	outline: none;
+}
+
+.actionTags.activate {
+	background: #ff0000;
+	color: #fff !important;
+	padding: 0px 0px 0px 5px;
+	font-size: 12px;
+	height: 22px;
+	display: inline-block;
+	outline: none;
+	width: 96px;
+	text-align: center;
+	cursor: pointer;
+}
+
+.actionTags.activate::after {
+	font-family: "FontAwesome";
+	content: "\f00c";
+	background: #e1e1e1;
+	color: #008000;
+	padding: 3px 18px;
+	font-size: 12px;
+	display: inline-block;
+	height: 100%;
+	width: 44px;
 	margin-left: 5px;
 	outline: none;
 }

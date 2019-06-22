@@ -12,6 +12,10 @@ function display_warning(msg)
 
 function display_success(msg)
 {
+	if ($('#errordiv').length == 0)
+	{
+
+	}
 	$('#errormsg').html(msg);
 	$('#errordiv').removeClass('alert-danger').removeClass('alert-warning').addClass('alert-success').addClass('show');
 }
