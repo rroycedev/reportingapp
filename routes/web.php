@@ -12,9 +12,12 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('dashboard');
 });
 Auth::routes();
+
+Route::get('/validate', 'ValidateController@index')->name('validate');
+Route::post('/validatelogin', 'ValidateController@validatelogin')->name('validatelogin');
 
 Route::get('/home', 'HomeController@index')->name('home')->middleware('auth');
 

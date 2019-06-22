@@ -10,6 +10,7 @@ use PhpXmlRpc\Value;
 use PhpXmlRpc\Request as XmlRpcRequest;
 use PhpXmlRpc\Client;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
@@ -55,12 +56,28 @@ class LoginController extends Controller
             return redirect()->intended('dashboard');
         }
     }
-/*
+
     public function login(Request $request)
     {
     	Log::emergency('Inside login');
 
-    	parent::login($request);
-    }
+	$this->validate($request, [ 'email' => 'required|email', 'password' => 'required']);
+/*
+	if ($this->auth->validate(['email' => $request->email, 'password' => $request->password, 'status' => 0])) {
+            return redirect($this->loginPath())
+                ->withInput($request->only('email', 'remember'))
+                ->withErrors('Your account is Inactive or not verified');
+        }
 */
+        $credentials  = array('email' => $request->email, 'password' => $request->password);
+        if (Auth::attempt($credentials, $request->has('remember'))){
+		Log::emergency('Attempt returned success');
+                return redirect()->intended($this->redirectPath());
+        }
+
+	Log::emergency('Attempt returned failure');
+
+        return redirect('/validate');
+    }
+
 }
