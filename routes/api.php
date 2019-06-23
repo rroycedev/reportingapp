@@ -21,5 +21,6 @@ Route::middleware('client_credentials:api')->group(function () {
 //	Route::resource('tables', 'API\TableController');
 	Route::get('reportfiles', 'API\ReportFilesController@find');
 	Route::get('updatereportfilestatus', 'API\ReportFilesController@updateStatus');
+
 	Route::get('updatereportstatus', 'API\ReportController@updateStatus');
 });

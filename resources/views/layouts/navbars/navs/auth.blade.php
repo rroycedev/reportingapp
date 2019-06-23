@@ -11,7 +11,15 @@
     <span class="navbar-toggler-icon icon-bar"></span>
     </button>
     <div class="collapse navbar-collapse justify-content-end">
-    	<div>          	<span style="line-height: 20px;vertical-align: middle;">Logged in as: <span style="color: #fcd800;font-weight: bold;">{{ Auth::user()->name }}</span></span></div>
+    	<div>
+    		<?php
+if (Auth::user()) {
+	?>
+    		<span style="line-height: 20px;vertical-align: middle;">Logged in as: <span style="color: #fcd800;font-weight: bold;">{{ Auth::user()->name }}</span></span>
+    		<?php
+}
+?>
+    	</div>
       <ul class="navbar-nav">
       	<!--
         <li class="nav-item">

@@ -55,3 +55,7 @@ primary:not(.card-header-icon):not(.card-header-text), .card.bg-primary, .card.c
     color: #000000;
 }
 
+.modal-header {
+    background-color: rgba(0, 166, 202, 1) !important;
+    color: #fff !important;	
+}

@@ -9,3 +9,34 @@
 .card [class*="card-header-"] .card-title a, .card [class*="card-header-"] .card-title, .card [class*="card-header-"] .icon i, .card[class*="bg-"] .card-title a, .card[class*="bg-"] .card-title, .card[class*="bg-"] .icon i {
     color: #ffffff !important;
 }
+
+.row {
+	margin-bottom: 10px !important;
+}
+
+
+.section-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 1rem 1rem;
+    border-bottom: 1px solid #dee2e6;
+    border-top-left-radius: 0.3rem;
+    border-top-right-radius: 0.3rem;
+    background-color: $tuyellow !important;
+    color: #000 !important;	
+    box-shadow: 0 4px 20px 0px rgba(0, 0, 0, 0.14), 0 7px 10px -5px rgba(156, 39, 176, 0.4);
+    font-style: italic;
+    font-weight: bold;
+    font-size: 17px;    
+}
+
+.expand-collapse-icon-blue {
+    color: $tublue;
+    font-size: 18px;
+}
+
+.red {
+	color: #ff0000;
+	font-weight: bold;
+}

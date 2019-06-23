@@ -20,7 +20,7 @@
     <link rel="stylesheet" href="/css/jtree.css" />
 
     <link href="/css/app.css" rel="stylesheet">
-  
+
     <link href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" rel="stylesheet">
 
 
@@ -31,7 +31,7 @@
             <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                 @csrf
             </form>
-        
+
         <div class="fixed-plugin">
         	<!--
           <div class="dropdown show-dropdown">
@@ -148,7 +148,9 @@
 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"></script>
 
+	<script>window.FileAPI = { staticPath: '/js/FileAPI/' };</script>
 
+        <script src="/js/FileAPI/FileAPI.js"></script>
 
         <script src="/js/common.js"></script>
         <script src="/js/reportmanagement.js"></script>

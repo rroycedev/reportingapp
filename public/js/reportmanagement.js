@@ -2,9 +2,46 @@ var searchableCols =  [true, true, true, false, false, false, true, false];
 var searchColWidths = ["100px", "100%", "100px", "100px", "100px", "100px", "100px", "100px"];
 
 var apiToken = "";
+var parameterTypes = ['Lookup', 'Parameter'];
+var parametersDefined = [];
+var uploadFiles = null;
 
 function InitReportManagement()
 {
+
+	var choose = document.getElementById('template_file');
+	FileAPI.event.on(choose, 'change', function (evt){
+		var files = FileAPI.getFiles(evt); // Retrieve file list
+
+		FileAPI.filterFiles(files, function (file, info/**Object*/){
+			//if( /^image/.test(file.type) ){
+			//	return	info.width >= 320 && info.height >= 240;
+			//}
+			//return	false;
+			return true;
+		}, function (files/**Array*/, rejected/**Array*/){
+			uploadFiles = files;
+
+			if( files.length ){
+				$('#template_name').val(files[0].name);
+				// Make preview 100x100
+				//FileAPI.each(files, function (file){
+				//	FileAPI.Image(file).preview(100).get(function (err, img){
+				//		images.appendChild(img);
+				//	});
+				//});
+
+				// Uploading Files
+//				FileAPI.upload({
+//					url: '/updatereportfile',
+//					files: { images: files },
+//					progress: function (evt){ /* ... */ },
+//					complete: function (err, xhr){ /* ... */ }
+//				});
+			}
+		});
+	});	
+
 	$('#report-table thead tr').clone(true).appendTo( '#report-table thead' );
 	$('#report-table thead tr:eq(1) th').each( function (i) {
 		if (searchableCols[i])
@@ -108,6 +145,155 @@ function InitReportManagement()
 
 		update_report_status(reportId, status, e.currentTarget);
 	});
+
+
+	$('#addReportFileSection').on('show.bs.modal', function (event) {
+		var button = $(event.relatedTarget) 
+		var title = button.data('title') 
+		var saveButtonText = button.data('savebuttontext');
+
+		var modal = $(this)
+		modal.find('#addReportFileSectionTitle').text(title)
+		modal.find('#save-btn').text(saveButtonText);
+
+		 $("#addeditreportfileform").on("submit", function(e) {
+		        var postData = $(this).serializeArray();
+		        var formURL = $(this).attr("action");
+		        $.ajax({
+		            url: '/updatereportfile',
+		            type: "POST",
+		            data: postData,
+		            success: function(data, textStatus, jqXHR) {
+		                $('#contact_dialog .modal-header .modal-title').html("Result");
+		                $('#contact_dialog .modal-body').html(data);
+		                $("#submitForm").remove();
+		            },
+		            error: function(jqXHR, status, error) {
+		                console.log(status + ": " + error);
+		            }
+		        });
+		        e.preventDefault();
+		    });
+
+		$("#save-btn").on('click', function(e){
+			document.addreportfileform.submit();
+
+			var f = $('#template_file');
+
+			var xhr = FileAPI.upload({
+					url : '/updatereportfile',
+					files : { file : uploadFiles },
+					data : {},
+					complete : function(err, xhr) {
+						
+					}
+				});
+		});
+
+
+	})
+
+	$('#errormsg').on('click', function(e) {
+		$('#errormsg').hide();
+	});
+
+
+	$('#general-toggle').on('click', function (event) {
+		expand_collapse_section('general');
+
+	});
+
+	$('#parameters-toggle').on('click', function (event) {
+		expand_collapse_section('parameters');
+	});
+
+	$('#advanced-toggle').on('click', function (event) {
+		expand_collapse_section('advanced');
+	});
+
+	parametersDefined = [];
+
+	$('#add-parameter-button').on('click', function(event) {
+		var paramName = $.trim($('#parameter-name-input').val());
+		var paramValue = $.trim($('#parameter-value-input').val());
+		var paramTypeName = parameterTypes[$('#parameter-type-select').val()];
+
+		if ($.trim($('#parameter-name-input').val()) == '')
+		{
+			$('#reportfile_error_required').text('You must specify a parameter name');
+			$('#reportfile_error_required').show();
+			setTimeout(function(){ $('#reportfile_error_required').hide(); }, 5000);
+			return;
+		}
+
+		if ($.trim($('#parameter-value-input').val()) == '')
+		{
+			$('#reportfile_error_required').text('You must specify a parameter value');
+			$('#reportfile_error_required').show();
+			setTimeout(function(){ $('#reportfile_error_required').hide(); }, 5000);			
+			return;
+		}
+
+		parametersDefined.push({name: paramName, type: paramTypeName, value: paramValue});
+
+		var html = '<tr data-paramname="' + paramName + '">' + 
+				'<td style="border-color: #888686;">' + paramName + '</td>' +
+				'<td style="border-color: #888686;">' + paramTypeName+ '</td>' +
+				'<td style="border-color: #888686;">' + paramValue + '</td>' +
+				'<td style="border-color: #888686;"><button class="btn-primary parameter-delete-btn" style="width: 100%;" data-paramname="' + paramName + '" >Delete</button></td>' +
+			'</tr>';
+
+		$(html).appendTo($('#parameter-table-body'));
+
+		$('#parameters-table').show();
+
+		$('.parameter-delete-btn').on('click', function(event){
+			var paramToDelete = event.currentTarget.attributes['data-paramname'].value;
+
+			parametersDefined = parametersDefined.filter(function( obj ) {
+			    return obj.name !== paramToDelete;
+			});
+
+			$('#parameters-table tr[data-paramname="'+paramToDelete+'"]').remove();
+
+			if (parametersDefined.length == 0)
+			{
+				$('#parameters-table').hide();
+			}
+		});
+
+	});
+
+	$('#parameter-type-select').on('change', function(event) {
+		var v = $('#parameter-type-select').val();
+
+		if (v != 0) 
+		{
+			$('#parameter-value-input').val('');
+			$('#parameter-value-input').prop('readonly', true);
+		}
+		else
+		{
+			$('#parameter-value-input').prop('readonly', false);
+		}
+	});
+
+}
+
+function expand_collapse_section(section)
+{
+	if ($('#' + section + '-toggle')[0].attributes['data-toggle'].value  == 'expand')
+	{
+		$('#' + section + '-body').show();
+		$('#' + section + '-toggle-icon').removeClass('fa-plus-square').addClass('fa-minus-square');
+		$('#' + section + '-toggle')[0].attributes['data-toggle'].value = 'collapse';
+	}
+	else
+	{
+		$('#' + section + '-body').hide();
+		$('#' + section + '-toggle-icon').removeClass('fa-minue-square').addClass('fa-plus-square');
+		$('#' + section + '-toggle')[0].attributes['data-toggle'].value = 'expand';
+	}
 
 }
 
@@ -299,8 +485,7 @@ function load_report_files(token, args)
 					}
 					else if (c == 'action')
 					{
-						tdValue = '<td><div style="text-align: center;"><a class="reportfileedit" data-reportfileid="' + d.Id + '">Edit</a></div></td>';
-
+						tdValue = '<td><div style="text-align: center;"><a class="reportfileedit btn btn-primary" data-toggle="modal" data-title="Edit Report File" data-savebuttontext="Update" data-target="#addReportFileSection" data-reportfileid="' + d.Id + '">Edit</a></div></td>';
 					}
 					else {
 						if (d[c])
